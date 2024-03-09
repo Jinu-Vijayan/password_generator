@@ -29,7 +29,12 @@ function HomeScreen(){
         e.preventDefault();
         if(passwordLength < 8 || passwordLength > 50){
             alert("Password length should be between 8 and 50")
-        } else {
+        }
+        else if (!passwordOptions[0].selected && !passwordOptions[1].selected && !passwordOptions[2].selected && ! passwordOptions[3].selected){
+
+            alert("Please select atleast one option to generate password ");
+        }
+         else {
             const password = generate({
                 length : passwordLength,
                 upperCase : passwordOptions[0].selected,
