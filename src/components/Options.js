@@ -1,12 +1,15 @@
+import { useRef } from 'react';
 import './Options.css'
 
 function Options({label , id , isSelected , setPasswordOptions}){
+
+    const isChecked = useRef();
 
     function checkHandler(e){
         
         setPasswordOptions((prevState) => {
             const data = [...prevState];
-            data[id].selected = e.target.checked
+            data[id].selected = isChecked.current.checked;
 
             return data;
         })
@@ -14,7 +17,7 @@ function Options({label , id , isSelected , setPasswordOptions}){
 
     return(
         <div>
-            <input type='checkBox' defaultChecked = {true} onChange={checkHandler} />
+            <input type='checkBox' defaultChecked = {true} onChange={checkHandler} ref={isChecked} />
             <label>{label}</label>
         </div>
     )

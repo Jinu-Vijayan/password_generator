@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import './HomeScreen.css'
 import { CgCopy } from "react-icons/cg";
 import Options from '../components/Options';
-import { generate, generateMultiple, validate } from '@wcj/generate-password';
+import { generate } from '@wcj/generate-password';
+import ShowPassword from '../components/ShowPassword';
 
 function HomeScreen(){
 
@@ -21,13 +22,14 @@ function HomeScreen(){
     }];
 
     const [password, setPassword] = useState("");
-    const [passwordLength, setPasswordLength] = useState(8);
     const [passwordOptions, setPasswordOptions] = useState(labels);
+
+    const passwordLength = useRef();
 
 
     function passwordGeneratorHandler(e){
         e.preventDefault();
-        if(passwordLength < 8 || passwordLength > 50){
+        if(passwordLength.current.value < 8 || passwordLength.current.value > 50){
             alert("Password length should be between 8 and 50")
         }
         else if (!passwordOptions[0].selected && !passwordOptions[1].selected && !passwordOptions[2].selected && ! passwordOptions[3].selected){
@@ -36,7 +38,7 @@ function HomeScreen(){
         }
          else {
             const password = generate({
-                length : passwordLength,
+                length : passwordLength.current.value,
                 upperCase : passwordOptions[0].selected,
                 lowerCase : passwordOptions[1].selected,
                 numeric : passwordOptions[2].selected,
@@ -45,10 +47,6 @@ function HomeScreen(){
     
             setPassword(password);
         }
-    }
-
-    function passwordLengthInputHandler(e){
-        setPasswordLength(e.target.value);
     }
 
     function textCopyHandler(e){
@@ -65,15 +63,10 @@ function HomeScreen(){
                 <h1>Password Generator</h1>
             </header>
             <form id='password-form'>
-                <div id='generated-password-container'>
-                    <input readOnly value = {password} placeholder='Password' />
-                    <button onClick={textCopyHandler} className='btn'>
-                        <CgCopy />
-                    </button>
-                </div>
+                <ShowPassword password={password} textCopyHandler={textCopyHandler}/>
                 <div id='password-length-selector'>
                     <label>Select Password length <span>(**8-50 characters**)</span></label>
-                    <input type='number' min={8} max={50} value={passwordLength} onChange={passwordLengthInputHandler}/>
+                    <input type='number' min={8} max={50} defaultValue={8} ref={passwordLength}/>
                 </div>
                 <div id='password-options-selectors'>
                     {
